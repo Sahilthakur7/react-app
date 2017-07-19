@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 class App extends React.Component {
     constructor(){
@@ -7,9 +8,13 @@ class App extends React.Component {
             txt: "this is the state text",
             cat: 0,
             currentEvent: '---',
-            a: ''
+            a: '',
+            val: 0
+
+
         }
         this.update2 = this.update2.bind(this)
+        this.update3 = this.update3.bind(this)
     }
     update(e) {
         this.setState({txt: this.refs.b.value, a: this.a.refs.input.value})
@@ -17,20 +22,34 @@ class App extends React.Component {
     update2(e) {
         this.setState({currentEvent: e.type})
     }
+    update3(){
+        this.setState({val: this.state.val + 1})
+    }
+    componentWillMount(){
+        console.log("Wil Mount");
+    }
+    componentDidMount(){
+        console.log("Did Mount");
+    }
+    componentWillUnmount(){
+        console.log("Unmounting");
+    }
     render(){
+        console.log("render firing up");
         return(
             <div>
             <input type="text" ref="b" onChange={this.update.bind(this)}/>
             <h1>{this.state.txt}</h1>
             <h2>{this.props.txt}</h2>
             <p><Button>I<Heart/>React</Button></p>
-            <p><Title text="Karanveer"/></p>
+            <div><Title text="Karanveer"/></div>
             <textarea onKeyPress={this.update2} onCopy={this.update2}/>
             <h2>{this.state.currentEvent}</h2>
             <div>
             <Input update={this.update.bind(this)} ref={ component => this.a = component} /> {this.state.a}
             </div>
 
+            <button onClick={this.update3}>{this.state.val}</button>
             </div>
         )
     }
@@ -43,7 +62,7 @@ const Button = (props) => <button>{props.children}</button>
         }
     }
 
-const Title = (props) => <h1>Raju &hearts; {props.text}</h1>
+const Title = (props) => <p>Raju &hearts; {props.text}</p>
     Title.propTypes = {
         text(props, propName, component){
             if (props[propName].length < 6) {
@@ -59,5 +78,20 @@ class Input extends React.Component {
     }
 }
 
-
-export default App
+class Wrapper extends React.Component {
+    mount(){
+        ReactDOM.render(<App/>, document.getElementById("a"));
+    }
+    unmount(){
+        ReactDOM.unmountComponentAtNode(document.getElementById("a"));
+    }
+    render(){
+        return(
+        <div>
+            <button onClick={this.mount.bind(this)}>Mount</button>
+            <button onClick={this.unmount.bind(this)}>UnMount</button>
+            <div id="a"></div>
+        </div>)
+    }
+}
+export default Wrapper
