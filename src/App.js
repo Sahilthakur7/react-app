@@ -27,12 +27,15 @@ class App extends React.Component {
     }
     componentWillMount(){
         console.log("Wil Mount");
+        this.setState({m: 2})
     }
     componentDidMount(){
         console.log("Did Mount");
+        this.inc = setInterval(this.update3,1000)
     }
     componentWillUnmount(){
         console.log("Unmounting");
+        clearInterval(this.inc)
     }
     render(){
         console.log("render firing up");
@@ -49,7 +52,7 @@ class App extends React.Component {
             <Input update={this.update.bind(this)} ref={ component => this.a = component} /> {this.state.a}
             </div>
 
-            <button onClick={this.update3}>{this.state.val}</button>
+            <button onClick={this.update3}>{this.state.val * this.state.m }</button>
             </div>
         )
     }
@@ -87,11 +90,11 @@ class Wrapper extends React.Component {
     }
     render(){
         return(
-        <div>
+            <div>
             <button onClick={this.mount.bind(this)}>Mount</button>
             <button onClick={this.unmount.bind(this)}>UnMount</button>
             <div id="a"></div>
-        </div>)
+            </div>)
     }
 }
 export default Wrapper
