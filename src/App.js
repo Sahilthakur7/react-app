@@ -75,7 +75,15 @@ class App extends React.Component {
             <Button2>Dbao mujhe</Button2>
             <br/>
             <LabelHOC>Dont touch me</LabelHOC>
+            <p>
+            <Parent>
+                <div className="Raju">
+                </div>
+                <div className="Mighty"></div>
+            </Parent>
+            </p>
             </div>
+
         )
     }
 }
@@ -107,16 +115,71 @@ class Wrapper extends React.Component {
     mount(){
         ReactDOM.render(<App/>, document.getElementById("a"));
     }
+    mount2(){
+        ReactDOM.render(<JSX/>,document.getElementById("b"));
+   }
     unmount(){
         ReactDOM.unmountComponentAtNode(document.getElementById("a"));
+    }
+    unmount2(){
+        ReactDOM.unmountComponentAtNode(document.getElementById("b"));
     }
     render(){
         return(
             <div>
+            <h2>Will</h2>
             <button onClick={this.mount.bind(this)}>Mount</button>
             <button onClick={this.unmount.bind(this)}>UnMount</button>
+            <button onClick={this.mount2.bind(this)}>JSX</button>
+            <button onClick={this.unmount2.bind(this)}>UnMount</button>
             <div id="a"></div>
+            <div id="b"></div>
             </div>)
+    }
+}
+
+class JSX extends React.Component {
+    constructor(){
+        super();
+        this.state = {
+            input: '/* add your input here.. */',
+            output: '',
+            err: ''
+        }
+    }
+    update(e){
+        let code = e.target.value;
+        try {
+            this.setState({
+                output: window.Babel.transform(code,{ presets: ['es2015','react']}).code,
+                err: ''
+            })
+        }
+        catch(err){
+            this.setState({err: err.message})
+        }
+    }
+
+    render(){
+        return(
+            <div>
+                <header>{this.state.err}</header>
+            <div className="container">
+                <textarea onChange={this.update.bind(this)} defaultValue={this.state.input}/>
+                
+            </div>
+            <pre>
+                {this.state.output}
+            </pre>
+            <p>
+            <Parent>
+                <div className="Raju">
+                </div>
+                <div className="Mighty"></div>
+            </Parent>
+            </p>
+            </div>
+        )
     }
 }
 
@@ -162,6 +225,13 @@ class Label extends React.Component {
         return(
             <label onMouseMove = {this.props.update}>{this.props.children}- {this.props.count}</label>
         )
+    }
+}
+
+class Parent extends React.Component {
+    render(){
+        let items = React.Children.forEach(this.props.children, child => console.log(child.props.className))
+        return null
     }
 }
 
