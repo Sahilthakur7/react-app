@@ -27,12 +27,16 @@ class App extends React.Component {
             cat: 0,
             currentEvent: '---',
             a: '',
-            val: 0
+            val: 0,
+            red: 0,
+            blue: 0,
+            green: 0
 
 
         }
         this.update2 = this.update2.bind(this)
         this.update3 = this.update3.bind(this)
+        this.update4 = this.update4.bind(this)
     }
     update(e) {
         this.setState({txt: this.refs.b.value, a: this.a.refs.input.value})
@@ -43,6 +47,12 @@ class App extends React.Component {
     update3(){
         this.setState({val: this.state.val + 1})
     }
+    update4(e){
+        this.setState({
+            red: ReactDOM.findDOMNode(this.refs.red.refs.inp).value,
+            blue: ReactDOM.findDOMNode(this.refs.blue.refs.inp).value,
+            green: ReactDOM.findDOMNode(this.refs.green.refs.inp).value
+    })}
     componentWillMount(){
         console.log("Wil Mount");
         this.setState({m: 2})
@@ -82,6 +92,21 @@ class App extends React.Component {
                 <div className="Mighty"></div>
             </Parent>
             </p>
+            <p>
+            <Buttons>
+            <button value="A">A</button>
+            <button value="B">B</button>
+            <button value="C">C</button>
+            
+            </Buttons>
+            </p>
+
+            <Slider ref="red" update4={this.update4}/>
+            {this.state.red}
+            <Slider ref="blue" update4={this.update4}/>
+            {this.state.blue}
+            <Slider ref="green" update4={this.update4}/>
+            {this.state.green}
             </div>
 
         )
@@ -232,6 +257,37 @@ class Parent extends React.Component {
     render(){
         let items = React.Children.forEach(this.props.children, child => console.log(child.props.className))
         return null
+    }
+}
+
+class Buttons extends React.Component {
+    constructor(){
+        super();
+        this.state = {selected: 'None'}
+    }
+    selectItem(selected){
+        this.setState({selected})
+    }
+
+    render(){
+        let fn = child => React.cloneElement(child, { onClick: this.selectItem.bind(this,child.props.value)})
+        let items = React.Children.map(this.props.children, fn)
+        return(
+            <div>
+             <h3>You have selected: {this.state.selected}</h3>
+            {items}
+            </div>
+        )
+    }
+}
+
+class Slider extends React.Component {
+    render(){
+        return(
+            <div>
+            <input ref="inp" type="range" min="0" max="200" onChange={this.props.update4}/>
+            </div>
+        )
     }
 }
 
