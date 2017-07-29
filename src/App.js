@@ -105,8 +105,15 @@ class App extends React.Component {
             {this.state.red}
             <Slider ref="blue" update4={this.update4}/>
             {this.state.blue}
-            <Slider ref="green" update4={this.update4}/>
-            {this.state.green}
+            <NumInput ref="green" 
+            min = {0}
+            max = {200}
+            step = {1}
+            val = {+this.state.green}
+            type = "number"
+            label = "Green"
+            update4 = {this.update4}
+            />
             </div>
 
         )
@@ -289,6 +296,43 @@ class Slider extends React.Component {
             </div>
         )
     }
+}
+
+class NumInput extends React.Component {
+    render(){
+        let label = this.props.label !== '' ? <label>{this.props.label} - {this.props.val}</label> : ''
+        return(
+            <div>
+            <input ref="inp" 
+            type = {this.props.type}
+            min = {this.props.min}
+            max = {this.props.max}
+            step = {this.props.step}
+            defaultValue={this.props.value}
+            onChange = {this.props.update4}/>
+            {label}
+            </div>
+        )
+    }
+}
+
+NumInput.proptypes = {
+    min: React.PropTypes.number,
+    max: React.PropTypes.number,
+    step: React.PropTypes.number,
+    val: React.PropTypes.number,
+    label: React.PropTypes.string,
+    update: React.PropTypes.func.isRequired,
+    type: React.PropTypes.oneOf(['number','range'])
+}
+
+NumInput.defaultProps = {
+    min: 0,
+    max: 0,
+    step: 0,
+    val: 4,
+    label: '',
+    type: 'range'
 }
 
 const LabelHOC = HOC(Label)
